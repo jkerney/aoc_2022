@@ -1,55 +1,18 @@
 """
-Advent of Code 2022 - Day 11
-
-Seven monkeys. For each monkey:
-- first line is items, each with a worry level
-- second line - operation for calculating a new worry level when the monkey
-- starts inspecting it
-- 3-5 lines - a test that decides which monkey it throws the item to
-
-- After applying new worry level, then divide by three and take floor
-
-- round - all monkeys take a turn
-- keep track of how many inspections each monkey does
-- monkey business - inspections of top two monkeys multiplied after 20
-- rounds
-
-- approach
-- for each monkey
-    - a list of worry level for each item
-    - operation type
-    - operation amount
-    - test divisible amount
-    - true monkey
-    - false monkey
-- one list for all monkeys
-- start with worry level
-
-Part 2
-- stop dividing worry by 3
-- what is level of monkey business after 10,000 rounds
-- problem is the numbers are getting too big...
-- if i take modulo of all numbers used in tests, does that give the same
-- result? e.g. test 1 is modulo 3, test 2 is modulo 11. 
-- number is 98, 98 % 3 = 2, 98 % 11 = 10.
-- if we took 98 modulo (3 * 11 = 33), we get 32. 
-- 32 % 3 = 2, 32 % 11 = 10.
-
+Advent of Code 2022 - Day 11 Part 2
 """
 
-import math
+#import math
 
-#FILE_PATH = "day_11/input.txt"
-FILE_PATH = "day_11/test.txt"
+FILE_PATH = "day_11/input.txt"
+#FILE_PATH = "day_11/test.txt"
 
 with open(FILE_PATH, "r", encoding="utf-8") as input_file:
 
     text_data = input_file.read()
     text_data = text_data.split('\n\n')
-    count = len(text_data)
+    count = len(text_data) # num monkeys
     text_data = [line.splitlines() for line in text_data]
-    #print(len(text_data))
-    #print(text_data[0:5])
 
     # Get items worry levels
     worry = [line[1].split()[2:] for line in text_data]
@@ -69,11 +32,16 @@ with open(FILE_PATH, "r", encoding="utf-8") as input_file:
     false_monkey = [line[5].split()[5] for line in text_data]
 
     inspect_count = [0] * count
+    #max_div = numpy.prod(test_div)
+    #issues installing numpy right now, just use for loop
+    max_div = 1
+    for i in range(len(test_div)):
+        max_div *= int(test_div[i])
 
-    # Now iterate through a round
-    for i in range(500):
-        # iterate through monkeys
+    # Now iterate through all rounds
+    for i in range(10000):
         #print(worry)
+        # iterate through monkeys
         for j in range(count):
             inspect_count[j] += len(worry[j])
             # get new worry level
@@ -83,8 +51,10 @@ with open(FILE_PATH, "r", encoding="utf-8") as input_file:
                 worry[j] = [x * x for x in worry[j]]
             elif op_type[j] == '*':
                 worry[j] = [x * int(operand[j]) for x in worry[j]]
-            
-            #worry[j] = [math.floor(x/3) for x in worry[j]]
+
+            # worry levels get really high, so mod by max_div
+            # which is the product of all test_div
+            worry[j] = [x % max_div for x in worry[j]]
 
             # throw to other monkeys
             for k in range(len(worry[j])):
@@ -93,11 +63,10 @@ with open(FILE_PATH, "r", encoding="utf-8") as input_file:
                 else:
                     worry[int(false_monkey[j])].append(worry[j][k])
             worry[j] = []
-        
-        print(worry)
-        print(inspect_count)
-    
-    print(inspect_count)
+
+        #print(worry)
+        #print(inspect_count)
+
     inspect_count.sort(reverse=True)
     print(inspect_count)
     print(inspect_count[0] * inspect_count[1])
