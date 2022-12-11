@@ -24,11 +24,23 @@ Seven monkeys. For each monkey:
     - false monkey
 - one list for all monkeys
 - start with worry level
+
+Part 2
+- stop dividing worry by 3
+- what is level of monkey business after 10,000 rounds
+- problem is the numbers are getting too big...
+- if i take modulo of all numbers used in tests, does that give the same
+- result? e.g. test 1 is modulo 3, test 2 is modulo 11. 
+- number is 98, 98 % 3 = 2, 98 % 11 = 10.
+- if we took 98 modulo (3 * 11 = 33), we get 32. 
+- 32 % 3 = 2, 32 % 11 = 10.
+
 """
 
 import math
 
-FILE_PATH = "day_11/input.txt"
+#FILE_PATH = "day_11/input.txt"
+FILE_PATH = "day_11/test.txt"
 
 with open(FILE_PATH, "r", encoding="utf-8") as input_file:
 
@@ -59,7 +71,7 @@ with open(FILE_PATH, "r", encoding="utf-8") as input_file:
     inspect_count = [0] * count
 
     # Now iterate through a round
-    for i in range(20):
+    for i in range(500):
         # iterate through monkeys
         #print(worry)
         for j in range(count):
@@ -67,13 +79,12 @@ with open(FILE_PATH, "r", encoding="utf-8") as input_file:
             # get new worry level
             if op_type[j] == '+':
                 worry[j] = [x + int(operand[j]) for x in worry[j]]
-                worry[j] = [math.floor(x/3) for x in worry[j]]
             elif op_type[j] == '*' and operand[j] == 'old':
                 worry[j] = [x * x for x in worry[j]]
-                worry[j] = [math.floor(x/3) for x in worry[j]]
             elif op_type[j] == '*':
                 worry[j] = [x * int(operand[j]) for x in worry[j]]
-                worry[j] = [math.floor(x/3) for x in worry[j]]
+            
+            #worry[j] = [math.floor(x/3) for x in worry[j]]
 
             # throw to other monkeys
             for k in range(len(worry[j])):
@@ -82,7 +93,11 @@ with open(FILE_PATH, "r", encoding="utf-8") as input_file:
                 else:
                     worry[int(false_monkey[j])].append(worry[j][k])
             worry[j] = []
-
+        
+        print(worry)
+        print(inspect_count)
+    
+    print(inspect_count)
     inspect_count.sort(reverse=True)
     print(inspect_count)
     print(inspect_count[0] * inspect_count[1])
