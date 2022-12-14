@@ -1,88 +1,85 @@
 """
 Advent of Code 2022 - Day 13
-
-- get indices of pairs that are in order
-
-- iterate through list
-- iterate through list and apply recursive function
-
-- for loop to iterate through pairs
-    - break for loop if in order and append to a list
-    - return 1 if in order, -1 if not in order
-
-- assume that the pairs of lists are never the same 
+https://adventofcode.com/2022/day/13
 
 """
+
+from ast import literal_eval
 
 FILE_PATH = "day_13/input.txt"
 #FILE_PATH = "day_13/test.txt"
 
-def test_order_fn(a, b):
-    
-    # Check if both integers
+def test_order_fn(item_a, item_b):
+    '''
+    Recursive function - check if lists are ordered
+    according to problem definition
+    '''
+    # Directly calculate order if both integers
     #print(a,b)
-    if type(a) == int and type(b) == int:
-        if a < b:
+    if isinstance(item_a, int) and isinstance(item_b, int):
+        if item_a < item_b:
             return 1
-        elif a > b:
+        elif item_a > item_b:
             return -1
         else:
             return 0
-    elif type(a) == int and type(b) == list:
-        a = [a]
-    elif type(a) == list and type(b) == int:
-        b = [b]
+    elif isinstance(item_a, int) and isinstance(item_b, list):
+        item_a = [item_a]
+    elif isinstance(item_a, list) and isinstance(item_b, int):
+        item_b = [item_b]
 
     # Now iterate through list a
-    for i in range(len(a)):
+    for i in range(len(item_a)):
         # First check if no item in list b
-        if i >= len(b):
+        if i >= len(item_b):
             return -1
         # Now compare the items by recursive call
         else:
-            order_outcome = test_order_fn(a[i], b[i])
+            order_outcome = test_order_fn(item_a[i], item_b[i])
             if order_outcome == 0:
                 continue
             else:
                 return order_outcome
-
-    if len(a) < len(b):
+ 
+    # Check if run out of items in a
+    if len(item_a) < len(item_b):
         return 1
     else:
         return 0
 
-with open(FILE_PATH, "r", encoding="utf-8") as input_file:
+def main():
+    '''
+    Part 1: Find the sum of the indices of all ordered pairs
+    '''
+    with open(FILE_PATH, "r", encoding="utf-8") as input_file:
 
-    text_data = input_file.read()
-    text_data = text_data.split('\n\n')
-    text_data = [line.splitlines() for line in text_data]
+        text_data = input_file.read()
+        text_data = text_data.split('\n\n')
+        text_data = [line.splitlines() for line in text_data]
 
-    # Convert a string of nested list of integers into a nest list of integers
-    data = [[eval(a) for a in line] for line in text_data]
-    
-    # Iterate over every pair
-    order_result = []
+        # Convert string of nested lists into python lists
+        data = [[literal_eval(a) for a in line] for line in text_data]
 
-    #pair = data[0]
+        # Iterate over every pair and get order outcome
+        order_result = []
 
-    # just get it working for the first pair for now
-    #a = pair[0]
-    #b = pair[1]
-    #print(test_order_fn(a,b))
+        for pair in data:
+            print("New pair: ", pair)
+            outcome = test_order_fn(pair[0],pair[1])
+            order_result.append(outcome)
+            print("Order: ", outcome)
 
-    for pair in data:
-        print("New pair: ", pair)
-        a = pair[0]
-        b = pair[1]
-        print("Order: ", test_order_fn(a,b))
-        order_result.append(test_order_fn(a,b))
+        print(order_result)
 
-    print(order_result)
+        # Get the sum of the indices of all ordered pairs
+        sum_indices = 0
 
-    sum_indices = 0
+        for i, outcome in enumerate(order_result):
+            if outcome == 1:
+                sum_indices += i + 1
 
-    for i in range(len(order_result)):
-        if order_result[i] == 1:
-            sum_indices += i + 1
+        print(sum_indices)
 
-    print(sum_indices)
+
+if __name__ == "__main__":
+    main()
