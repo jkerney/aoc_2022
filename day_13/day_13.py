@@ -40,7 +40,7 @@ def test_order_fn(item_a, item_b):
                 continue
             else:
                 return order_outcome
- 
+
     # Check if run out of items in a
     if len(item_a) < len(item_b):
         return 1
