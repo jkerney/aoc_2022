@@ -1,5 +1,5 @@
 """
-Advent of Code 2022 - Day 14
+Advent of Code 2022 - Day 14 - Part 2
 https://adventofcode.com/2022/day/14
 """
 
@@ -23,8 +23,7 @@ def print_grid(grid, x_min, x_max, y_min, y_max):
 
 def main():
     '''
-    Day 14 Part 1 - calculate count of sand that has come to rest
-    before it hits the abyss
+    Day 14 Part 2
     '''
     with open(FILE_PATH, "r", encoding="utf-8") as input_file:
 
@@ -47,9 +46,14 @@ def main():
         y_max = max(y_pos_list)
         y_min = min(y_pos_list)
 
+        # Add horizontal line at y_max + 2
+        # To be safe, set the width of the x-axis to be
+        # the max x coord + 4 * max y coord
+        data.append([(0, y_max + 2), (x_max + 4 * y_max - 1, y_max + 2)])
+
         # Create grid
         # https://stackoverflow.com/questions/72128627/how-to-assign-a-value-to-nested-list-while-keeping-the-original-list-in-python
-        grid = [['.' for _ in range(x_max + 100)] for _ in range(y_max+100)]
+        grid = [['.' for _ in range(x_max + 4 * y_max)] for _ in range(y_max+100)]
 
         # Insert a '#' for each position of rock
         for line in data:
@@ -71,23 +75,25 @@ def main():
 
         print_grid(grid, max(x_min - 10, 0), x_max + 10, max(y_min - 10, 0), y_max + 10)
 
-        # Now drop sand until one of them hits the abyss
-        hit_abyss = False
+        source_blocked = False
         count_sand_rest = 0
 
-        while hit_abyss is False:
+        while source_blocked is False:
             #print("New sand")
             sand_pos = (500, -1)
+            # Check if source is blocked
+            if grid[0][500] == 'o':
+                source_blocked = True
+                break
 
             while True:
-
                 old_sand_pos = sand_pos
                 # Check if sand is going to hit abyss
-                if sand_pos[1] > y_max:
-                    hit_abyss = True
-                    break
+                #if sand_pos[1] > y_max:
+                #    hit_abyss = True
+                #    break
                 # Check if sand can move down
-                elif grid[sand_pos[1] + 1][sand_pos[0]] == '.':
+                if grid[sand_pos[1] + 1][sand_pos[0]] == '.':
                     sand_pos = (sand_pos[0], sand_pos[1] + 1)
                 # Check if sand can move down-left
                 elif grid[sand_pos[1] + 1][sand_pos[0] - 1] == '.':
