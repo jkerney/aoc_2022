@@ -1,6 +1,13 @@
 """
 Advent of Code 2022 - Day 15 Part 1
 https://adventofcode.com/2022/day/15
+
+- For each sensor, we know the closest beacon
+- 
+
+- For a given row, find out how many spots don't have a beacon
+
+
 """
 
 #from ast import literal_eval
