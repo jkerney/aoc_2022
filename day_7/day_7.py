@@ -93,14 +93,32 @@ def main():
             dir_size[dir_name] = calc_dir_size(dir_name, directories,
                                                file_sizes)
 
+        # Part 1
         # Get all directories with a size of at most 100000
         # Print the sum of these directory sizes
         result = 0
-        for dir_name, dir_size in dir_size.items():
-            if dir_size <= 100000:
-                result += dir_size
+        for name, size in dir_size.items():
+            if size <= 100000:
+                result += size
 
         print(result)
+
+        # Part 2
+        # Total filesystem space is 70000000
+        # Free space is 70000000 - size of root directory
+        # Find the smallest directory such that if we delete it,
+        # free space is at least 30000000
+
+        free_space = 70000000 - dir_size['root']
+
+        # Sort the directories by size
+        # Iterate over the directories and find first directory
+        # such that free_space + size >= 30000000
+        sorted_dirs = sorted(dir_size.items(), key=lambda x: x[1])
+        for name, size in sorted_dirs:
+            if free_space + size >= 30000000:
+                print(name, size)
+                break
 
 if __name__ == '__main__':
     main()
