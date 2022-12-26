@@ -26,5 +26,11 @@ def main():
             print(i+4)
             break
 
+    # In part 2, we need to instead look for 14 unique characters
+    for i in range(0, len(data)-14):
+        if len(set(data[i:i+14])) == 14:
+            print(i+14)
+            break
+
 if __name__ == "__main__":
     main()
