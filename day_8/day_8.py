@@ -20,6 +20,19 @@ Each list is a column of the grid
 
 # Output
 How many trees are visible from outside the grid
+
+## Part 1
+
+# Calculate
+For each tree, calculate the scenic score
+Scenic score is calculated by checking up, down, left, right
+Find how many trees until we find one that is the same height or taller,
+or we reach the edge
+Scenic score is then number of trees found in each direction multiplied
+
+# Output
+Highest scenic score in the grid
+
 '''
 
 FILE_PATH = "day_8/input.txt"
@@ -29,43 +42,67 @@ def is_visible(grid, x_pos, y_pos):
     '''
     Check if a tree is visible from outside the grid
     '''
+    visible_up = True
+    visible_down = True
+    visible_left = True
+    visible_right = True
+
     # Check up
-    tree_visible = True
     for index in range(y_pos - 1, -1, -1):
         if grid[x_pos][index] >= grid[x_pos][y_pos]:
-            tree_visible = False
-
-    if tree_visible:
-        return True
+            visible_up = False
 
     # Check down
-    tree_visible = True
     for index in range(y_pos + 1, len(grid[x_pos])):
         if grid[x_pos][index] >= grid[x_pos][y_pos]:
-            tree_visible = False
-
-    if tree_visible:
-        return True
+            visible_down = False
 
     # Check left
-    tree_visible = True
     for index in range(x_pos - 1, -1, -1):
         if grid[index][y_pos] >= grid[x_pos][y_pos]:
-            tree_visible = False
-
-    if tree_visible:
-        return True
+            visible_left = False
 
     # Check right
-    tree_visible = True
     for index in range(x_pos + 1, len(grid)):
         if grid[index][y_pos] >= grid[x_pos][y_pos]:
-            tree_visible = False
+            visible_right = False
 
-    if tree_visible:
-        return True
-    else:
-        return False
+    return max(visible_up, visible_down, visible_left, visible_right)
+
+def scenic_score(grid, x_pos, y_pos):
+    '''
+    Calculate the scenic score for the tree
+    '''
+    scenic_up = 0
+    scenic_down = 0
+    scenic_left = 0
+    scenic_right = 0
+
+    # Check up
+    for index in range(y_pos - 1, -1, -1):
+        scenic_up += 1
+        if grid[x_pos][index] >= grid[x_pos][y_pos]:
+            break
+
+    # Check down
+    for index in range(y_pos + 1, len(grid[x_pos])):
+        scenic_down += 1
+        if grid[x_pos][index] >= grid[x_pos][y_pos]:
+            break
+
+    # Check left
+    for index in range(x_pos - 1, -1, -1):
+        scenic_left += 1
+        if grid[index][y_pos] >= grid[x_pos][y_pos]:
+            break
+
+    # Check right
+    for index in range(x_pos + 1, len(grid)):
+        scenic_right += 1
+        if grid[index][y_pos] >= grid[x_pos][y_pos]:
+            break
+
+    return scenic_up * scenic_down * scenic_left * scenic_right
 
 def main():
     '''
@@ -76,6 +113,8 @@ def main():
         data = data.splitlines()
 
         # Create the data structure for the grid
+        # Each list within the list is a column
+        # This means we can address the grid using grid[x][y]
         grid = [[] for _ in range(len(data[0]))]
         for line in data:
             for index, char in enumerate(line):
@@ -90,7 +129,17 @@ def main():
                 if is_visible(grid, x_pos, y_pos):
                     visible_trees += 1
 
-        print(visible_trees)
+        print("Part 1:", visible_trees)
+
+        # Part 2
+        # Calculate scenic score for all trees not on the edge
+        # Trees on the edge will always have a score of 0
+        scenic_scores = []
+        for x_pos in range(1, len(grid) - 1):
+            for y_pos in range(1, len(grid[x_pos]) - 1):
+                scenic_scores.append(scenic_score(grid, x_pos, y_pos))
+
+        print("Part 2:", max(scenic_scores))
 
 if __name__ == "__main__":
     main()
