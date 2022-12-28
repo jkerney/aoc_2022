@@ -3,6 +3,7 @@ Advent of Code - Day 9 - Part 1
 
 ## Part 1
 
+
 # Input
 A sequence of moves. Example format 'R 4'.
 The first character is one of the four directions: U, D, L, R.
