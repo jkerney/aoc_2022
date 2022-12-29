@@ -1,0 +1,30 @@
+move DD
+open DD
+move CC
+move BB
+open BB
+move AA
+move II
+move JJ
+open JJ
+move II
+move AA
+move DD
+move EE
+move FF
+move GG
+move HH
+open HH
+move GG
+move FF
+move EE
+open EE
+move DD
+move CC
+open CC
+nothing
+nothing
+nothing
+nothing
+nothing
+nothing
